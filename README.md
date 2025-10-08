@@ -16,16 +16,14 @@ go build -o goascii.exe
 
 ## 사용법
 
-이미지를 변환하려면 `convert` 명령을 사용하십시오.
-
 ```bash
 goascii convert <이미지-경로> [플래그]
 ```
 
 ### 플래그
 
-- `--resolution`, `-r`: ASCII 아트의 해상도를 설정합니다 (기본값: 60).
-- `--output`, `-o`: 출력 HTML 파일 이름을 지정합니다 (기본값: "templated.html").
+- `--resolution`, `-r`: ASCII 아트의 해상도를 설정 (기본값: 60).
+- `--output`, `-o`: 출력 HTML 파일 이름을 지정 (기본값: "templated.html").
 
 ### 예시
 
