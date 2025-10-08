@@ -46,12 +46,22 @@ You can specify the resolution of the ASCII art.`,
 
 		ratio := float64(height) / float64(width)
 
-		fontSize := 300.0 / float64(resolution)
-		if fontSize < 0.5 {
-			fontSize = 0.5
+		forX := bounds.Max.X / resolution
+		forY := bounds.Max.Y / resolution
+		if forX == 0 {
+			forX = 1
+		}
+		if forY == 0 {
+			forY = 1
 		}
 
-		lineHeight := ratio / 2
+		cols := width / forX
+		rows := height / forY
+
+		targetScreenWidthPx := 1000.0 // HTML 상 가상의 기준 폭
+		fontSize := targetScreenWidthPx / (float64(cols) * 0.6)
+
+		lineHeight := (float64(rows) / float64(cols)) / ((1 / ratio) * 2)
 
 		html := fmt.Sprintf(`<!DOCTYPE html>
 <html lang="en">
@@ -75,15 +85,6 @@ You can specify the resolution of the ASCII art.`,
 		asciiPixel := "@$#Y!=+~- "
 		var index int
 		content := ""
-
-		forX := bounds.Max.X / resolution
-		forY := bounds.Max.Y / resolution
-		if forX == 0 {
-			forX = 1
-		}
-		if forY == 0 {
-			forY = 1
-		}
 
 		for y := bounds.Min.Y; y < bounds.Max.Y; y += forY {
 			for x := bounds.Min.X; x < bounds.Max.X; x += forX {
