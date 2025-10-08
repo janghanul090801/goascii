@@ -1,4 +1,4 @@
-module github.com/janghanul090801/GodingApple
+module github.com/janghanul090801/goascii
 
 go 1.24.1
 
