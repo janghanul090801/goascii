@@ -1,6 +1,5 @@
 /*
 Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -8,8 +7,8 @@ import (
 	"fmt"
 	"html/template"
 	"image"
-	_ "image/png"
 	_ "image/jpeg"
+	_ "image/png"
 	"math"
 	"os"
 
@@ -28,23 +27,6 @@ You can specify the resolution of the ASCII art.`,
 		resolution, _ := cmd.Flags().GetInt("resolution")
 		output, _ := cmd.Flags().GetString("output")
 
-		html := `<!DOCTYPE html>
-	<html lang="en">
-	<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-	<style>
-		pre {
-			line-height: 7px;
-		}
-	</style>
-	</head>
-	<body>
-	<pre>{{.Content}}</pre>
-	</body>
-	</html>`
-
 		f, err := os.Open(imgPath)
 		if err != nil {
 			fmt.Println(err)
@@ -59,12 +41,49 @@ You can specify the resolution of the ASCII art.`,
 		}
 
 		bounds := img.Bounds()
+		width := bounds.Dx()
+		height := bounds.Dy()
+
+		ratio := float64(height) / float64(width)
+
+		fontSize := 300.0 / float64(resolution)
+		if fontSize < 0.5 {
+			fontSize = 0.5
+		}
+
+		lineHeight := ratio / 2
+
+		html := fmt.Sprintf(`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASCII Art</title>
+<style>
+	pre {
+		font-family: monospace;
+		font-size: %.2fpx;
+		line-height: %.3f;
+	}
+</style>
+</head>
+<body>
+<pre>{{.Content}}</pre>
+</body>
+</html>`, fontSize, lineHeight)
+
 		asciiPixel := "@$#Y!=+~- "
 		var index int
 		content := ""
 
 		forX := bounds.Max.X / resolution
 		forY := bounds.Max.Y / resolution
+		if forX == 0 {
+			forX = 1
+		}
+		if forY == 0 {
+			forY = 1
+		}
 
 		for y := bounds.Min.Y; y < bounds.Max.Y; y += forY {
 			for x := bounds.Min.X; x < bounds.Max.X; x += forX {
@@ -91,7 +110,7 @@ You can specify the resolution of the ASCII art.`,
 			content,
 		}
 
-				ff, err := os.Create(output)
+		ff, err := os.Create(output)
 		if err != nil {
 			fmt.Println(err)
 			return
