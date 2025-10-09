@@ -58,7 +58,7 @@ You can specify the resolution of the ASCII art.`,
 		cols := width / forX
 		rows := height / forY
 
-		targetScreenWidthPx := 1000.0 // HTML 상 가상의 기준 폭
+		targetScreenWidthPx, _ := cmd.Flags().GetFloat64("width")
 		fontSize := targetScreenWidthPx / (float64(cols) * 0.6)
 
 		lineHeight := (float64(rows) / float64(cols)) / ((1 / ratio) * 2)
@@ -131,4 +131,5 @@ func init() {
 	rootCmd.AddCommand(convertCmd)
 	convertCmd.Flags().IntP("resolution", "r", 60, "Resolution of the ASCII art")
 	convertCmd.Flags().StringP("output", "o", "templated.html", "Output HTML file name")
+	convertCmd.Flags().Float64P("width", "w", 1000, "Width of the ASCII art(px)")
 }
